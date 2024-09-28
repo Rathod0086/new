@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Feedback Result</title>
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@200;300;400;500;600;700&display=swap");
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Open Sans", sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            width: 100%;
+            padding: 100px 10px;
+            color: #fff;
+        }
+
+        .card {
+            width: 400px;
+            height: auto;
+            padding: 20px;
+            border-radius: 8px;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .circle-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 20px 0;
+            padding-left: 35px;
+        }
+
+        .circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: conic-gradient(gray 0deg, gray 360deg);
+            transition: background 1s ease;
+        }
+
+        .circle .score {
+            font-size: 1.5rem;
+            position: absolute;
+            color: #fff;
+        }
+
+        .circle-label {
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+        
+
+        .bg-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop class="bg-video">
+        <source src="bg video1.mp4" type="video/mp4" />
+    </video>
+
+    <div class="card">
+        <h2>Feedback Summary</h2>
+        <p>Faculty Name: <span id="facultyName"></span></p>
+        <div class="circle-container">
+            <div>
+                <div id="syllabus-circle" class="circle">
+                    <div class="score" id="syllabusScore">0</div>
+                </div>
+                <div class="circle-label">Syllabus Completion</div>
+            </div>
+            <div>
+                <div id="teaching-circle" class="circle">
+                    <div class="score" id="teachingScore">0</div>
+                </div>
+                <div class="circle-label">Teaching Quality</div>
+            </div>
+            <div>
+                <div id="engagement-circle" class="circle">
+                    <div class="score" id="engagementScore">0</div>
+                </div>
+                <div class="circle-label">Course Engagement</div>
+            </div>
+            <div>
+                <div id="communication-circle" class="circle">
+                    <div class="score" id="communicationScore">0</div>
+                </div>
+                <div class="circle-label">Communication Skills</div>
+            </div>
+            <div>
+                <div id="skills-circle" class="circle last">
+                    <div class="score" id="skillsScore">0</div>
+                </div>
+                <div class="circle-label">Student Skills</div>
+            </div>
+        </div>
+        <p>Thank You For Your Feedback</p>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        const facultyName = localStorage.getItem("facultyName") || "Not provided";
+        const syllabusCompletion = localStorage.getItem("syllabusCompletion") || "Not answered";
+        const teachingQuality = localStorage.getItem("teachingQuality") || "Not answered";
+        const courseEngagement = localStorage.getItem("courseEngagement") || "Not answered";
+        const communicationSkills = localStorage.getItem("communicationSkills") || "Not answered";
+        const studentSkills = localStorage.getItem("studentSkills") || "Not answered";
+
+        // Set faculty name
+        document.getElementById("facultyName").innerText = facultyName;
+
+        const scores = {
+        "Excellent": 5,
+        "Very Good": 4,
+        "Good": 3,
+        "Satisfactory": 2,
+        "Poor": 0,
+    };
+
+const colors = {
+    100: 'green',
+    80: 'limegreen',
+    60: 'yellowgreen',
+    40: 'orange',
+    20: 'red',
+    0: 'gray'
+};
+
+function updateCircleScore(feedbackValue, circleId, scoreId) {
+    const score = scores[feedbackValue] || 0;
+    const percentage = (score / 5) * 100;  
+    
+    let color;
+    if (percentage === 100) {
+        color = colors[100];
+    } else if (percentage >= 80) {
+        color = colors[80];
+    } else if (percentage >= 60) {
+        color = colors[60];
+    } else if (percentage >= 40) {
+        color = colors[40];
+    } else if (percentage >= 20) {
+        color = colors[20];
+    } else {
+        color = colors[0];
+    }
+
+    document.getElementById(circleId).style.background = `conic-gradient(${color} 0deg, ${color} ${percentage * 3.6}deg, gray ${percentage * 3.6}deg)`;
+    
+    // Display the percentage inside the circle
+    document.getElementById(scoreId).innerText = `${percentage}`;
+}
+
+
+        // Update the circle elements with the retrieved feedback values
+        updateCircleScore(syllabusCompletion, "syllabus-circle", "syllabusScore");
+        updateCircleScore(teachingQuality, "teaching-circle", "teachingScore");
+        updateCircleScore(courseEngagement, "engagement-circle", "engagementScore");
+        updateCircleScore(communicationSkills, "communication-circle", "communicationScore");
+        updateCircleScore(studentSkills, "skills-circle", "skillsScore");
+    });
+    </script>
+</body>
+</html>
